@@ -3,7 +3,25 @@ const bcrypt = require('bcrypt')
 
 
 const getAllUsers = async (req, res) => {
-    res.send('get')
+    try {
+        const users = await User.find({})
+
+        if (!users) {
+            return res.status(404).json({
+                success: false,
+                message: 'Could not get user'
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            data: users
+        })
+    } catch (error) {
+        return res.status(404).json({
+            msg: 'Some thing went wrong'
+        })
+    }
 }
 const signUp = async (req, res) => {
     const { name, email, phone, password, role } = req.body
