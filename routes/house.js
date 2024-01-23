@@ -8,6 +8,6 @@ router.get('/', getAllHouses)
 router.post('/create', createHouse)
 router.get('/:id', getASingleHouse)
 router.put('/update/:id', updateHouse)
-router.delete('/delete/:id', deleteHouse)
+router.delete('/delete', deleteHouse)
 
 module.exports = router

@@ -37,6 +37,10 @@ const houseSchema = new Schema({
     desc: {
         type: String,
     },
+    addedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 module.exports = mongoose.model('House', houseSchema)
