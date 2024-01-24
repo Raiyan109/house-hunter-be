@@ -18,7 +18,11 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-    }
+    },
+    houses: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'House'
+    }]
 })
 
 module.exports = mongoose.model('User', userSchema)

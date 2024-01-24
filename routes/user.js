@@ -1,5 +1,6 @@
 const express = require('express');
 const { getAllUsers, signUp, signIn } = require('../controllers/userController');
+const authGuard = require('../middleware/authGuard.js')
 
 const router = express.Router()
 

@@ -1,6 +1,6 @@
 const User = require('../models/userModel.js')
 const bcrypt = require('bcrypt')
-
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -50,13 +50,13 @@ const signUp = async (req, res) => {
     }
 }
 const signIn = async (req, res) => {
-    const { email, password } = req.body
+    const { email, password, _id } = req.body
 
     let existingUser;
 
     try {
         existingUser = await User.findOne({ email })
-
+        console.log(existingUser._id.toString(), 'from signin 59');
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
@@ -71,9 +71,30 @@ const signIn = async (req, res) => {
         return res.status(400).json({ msg: 'Incorrect Password' })
     }
 
-    // const token = jwt.sign({ _id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
+    if (isPasswordCorrect) {
 
-    return res.status(200).json({ user: existingUser })
+        const token = jwt.sign({
+            userId: existingUser._id.toString()
+
+        }, process.env.JWT_SECRET, {
+            expiresIn: '1h'
+        })
+        res.status(200).json({
+            access_token: token,
+            message: "Login success",
+            user: existingUser
+        })
+    }
+    else {
+        res.status(401).json({
+            error: "Authentication failed!"
+        });
+    }
+
+    // return res.status(200).json({
+    //     user: existingUser,
+
+    // })
 }
 const updateUser = async (req, res) => {
 
