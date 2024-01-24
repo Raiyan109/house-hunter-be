@@ -10,7 +10,7 @@ const getAllBookings = async (req, res) => {
 
 const createBooking = async (req, res) => {
     const { name, email, bookedBy, bookingsList } = req.body
-    console.log(req.body);
+
     let existingUser;
     try {
         existingUser = await User.findById(bookedBy)
@@ -21,6 +21,8 @@ const createBooking = async (req, res) => {
     if (!existingUser) {
         return res.status(404).json({ message: 'No User found by this id' })
     }
+
+
 
     const booking = await Booking.create({ name, email, bookedBy: req.userId, bookingsList })
 
@@ -62,8 +64,32 @@ const getBookingByUserId = async (req, res) => {
 const getASingleHouse = async (req, res) => {
 
 }
-const updateHouse = async (req, res) => {
+const updateBooking = async (req, res) => {
+    try {
+        const id = req.params.id
+        const { name, status } = req.body
+        if (!mongoose.Types.ObjectId.isValid(id))
+            return res.status(404).json({
+                msg: `No task with id :${id}`
+            });
 
+        const task = await Task.findByIdAndUpdate(id, {
+            name,
+            status
+        })
+
+        if (!task) {
+            return res.status(400).json({ msg: 'No Task can be updated' })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully Updated',
+            data: task
+        })
+    } catch (error) {
+        return res.status(400).json({ msg: 'Something went wrong' })
+    }
 }
 const deleteBooking = async (req, res) => {
     try {
@@ -88,4 +114,4 @@ const deleteBooking = async (req, res) => {
     }
 }
 
-module.exports = { createBooking, getBookingByUserId, deleteBooking }
+module.exports = { createBooking, getBookingByUserId, deleteBooking, updateBooking }

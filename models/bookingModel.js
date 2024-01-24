@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema
 
+
 const bookingModel = new Schema({
     name: {
         type: String,
@@ -20,7 +21,8 @@ const bookingModel = new Schema({
     bookingsList:
     {
         type: String
-    }
+    },
+
 
 })
 
