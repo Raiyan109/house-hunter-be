@@ -1,7 +1,6 @@
 const authGuard = require('../middleware/authGuard.js')
 const House = require('../models/houseModel.js')
 const User = require('../models/userModel.js')
-const { signIn } = require('./userController.js')
 
 
 
@@ -63,7 +62,6 @@ const createHouse = async (req, res) => {
     }
 
     const house = await House.create({ name, address, phone, city, bedrooms, bathrooms, size, image, available, rent, desc, addedBy: req.userId })
-    console.log(house._id);
     if (!house) {
         return res.status(400).json({ msg: 'No house can be created' })
     }
@@ -84,8 +82,7 @@ const getHouseByUserId = async (req, res) => {
 
     try {
         const user = await User.findById(req.userId).populate('houses');
-        console.log(req.userId, 'from get house by user');
-        console.log(user, 'from get house by user');
+
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
