@@ -5,6 +5,12 @@ const User = require('../models/userModel.js')
 
 
 const getAllHouses = async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader("Access-Control-Max-Age", "1800");
+    res.setHeader("Access-Control-Allow-Headers", "content-type");
+    res.setHeader("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS");
+
     const search = req.query.search || ''
     const city = req.query.city || ''
     const bedrooms = req.query.bedrooms || ''
@@ -60,6 +66,8 @@ const getAllHouses = async (req, res) => {
 
 
 const createHouse = async (req, res) => {
+
+
     const { name, address, phone, city, bedrooms, bathrooms, size, image, available, rent, desc, addedBy } = req.body
 
     let existingUser;

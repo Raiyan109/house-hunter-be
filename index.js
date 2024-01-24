@@ -2,13 +2,14 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors');
 require('dotenv').config()
+app.use(cors())
 const userRoutes = require('./routes/user.js');
 const houseRoutes = require('./routes/house.js')
 const bookingRoutes = require('./routes/booking.js')
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+
 
 app.use('/api/v1/users', userRoutes)
 app.use('/api/v1/houses', houseRoutes)
