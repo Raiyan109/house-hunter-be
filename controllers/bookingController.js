@@ -1,4 +1,3 @@
-const authGuard = require('../middleware/authGuard.js')
 const Booking = require('../models/bookingModel.js')
 const User = require('../models/userModel.js')
 
@@ -10,8 +9,8 @@ const getAllBookings = async (req, res) => {
 
 
 const createBooking = async (req, res) => {
-    const { name, email, bookedBy } = req.body
-
+    const { name, email, bookedBy, bookingsList } = req.body
+    console.log(req.body);
     let existingUser;
     try {
         existingUser = await User.findById(bookedBy)
@@ -23,9 +22,8 @@ const createBooking = async (req, res) => {
         return res.status(404).json({ message: 'No User found by this id' })
     }
 
-    const booking = await Booking.create({ name, email, bookedBy: req.userId })
-    console.log(req.userId);
-    console.log(booking);
+    const booking = await Booking.create({ name, email, bookedBy: req.userId, bookingsList })
+
     if (!booking) {
         return res.status(400).json({ msg: 'No booking can be created' })
     }
@@ -46,8 +44,7 @@ const getBookingByUserId = async (req, res) => {
 
     try {
         const user = await User.findById(req.userId).populate('bookings');
-        console.log(req.userId, 'from get booking by user');
-        console.log(user, 'from get booking by user');
+
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
@@ -68,8 +65,27 @@ const getASingleHouse = async (req, res) => {
 const updateHouse = async (req, res) => {
 
 }
-const deleteHouse = async (req, res) => {
-    res.status(200).json({ msg: 'all deleted' })
+const deleteBooking = async (req, res) => {
+    try {
+        const id = req.params.id
+        console.log(id);
+        // if (!mongoose.Types.ObjectId.isValid(id))
+        //     return res.status(404).json({
+        //         msg: `No booking with id :${id}`
+        //     });
+        const booking = await Booking.findByIdAndDelete(id)
+
+        if (!booking) {
+            return res.status(400).json({ msg: 'No booking can be deleted' })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully Deleted'
+        })
+    } catch (error) {
+        return res.status(400).json({ msg: 'Something went wrong' })
+    }
 }
 
-module.exports = { createBooking, getBookingByUserId }
+module.exports = { createBooking, getBookingByUserId, deleteBooking }

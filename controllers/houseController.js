@@ -97,7 +97,21 @@ const getHouseByUserId = async (req, res) => {
 }
 
 const getASingleHouse = async (req, res) => {
+    const id = req.params.id
+    try {
+        const house = await House.findById(id)
 
+        if (!house) {
+            return res.status(404).json({ msg: 'House not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: house
+        });
+    } catch (error) {
+        return res.status(400).json({ msg: 'Something went wrong' })
+    }
 }
 const updateHouse = async (req, res) => {
 

@@ -17,6 +17,10 @@ const bookingModel = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'User'
     },
+    bookingsList:
+    {
+        type: String
+    }
 
 })
 
