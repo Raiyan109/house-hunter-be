@@ -11,7 +11,8 @@ const getAllHouses = async (req, res) => {
     const bathrooms = req.query.bathrooms || ''
     const size = req.query.size || ''
     const rent = req.query.rent || ''
-
+    const page = req.query.page || 1
+    const ITEM_PER_PAGE = 4;
 
     const query = {
         name: { $regex: search, $options: 'i' }
@@ -32,8 +33,15 @@ const getAllHouses = async (req, res) => {
     if (rent !== '') {
         query.rent = rent
     }
+
+    const skip = (page - 1) * ITEM_PER_PAGE  // 1 * 4 = 4
+
     const houses = await House.find(query)
-    const totalHouses = await House.countDocuments()
+        .limit(ITEM_PER_PAGE)
+        .skip(skip);
+    const count = await House.countDocuments(query)
+    const pageCount = Math.ceil(count / ITEM_PER_PAGE);  // 8 /4 = 2
+
 
     if (!houses) {
         return res.status(400).json({ msg: 'No House found' })
@@ -41,8 +49,12 @@ const getAllHouses = async (req, res) => {
 
     res.status(200).json({
         success: true,
-        total: totalHouses,
-        data: houses
+        total: count,
+        data: houses,
+        pagination: {
+            count,
+            pageCount
+        }
     })
 }
 
