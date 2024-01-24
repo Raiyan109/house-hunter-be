@@ -25,8 +25,7 @@ const userSchema = new Schema({
     }],
     bookings: [{
         type: mongoose.Types.ObjectId,
-        ref: 'Booking',
-        max: [2, 'You cannot book over 2 houses']
+        ref: 'Booking'
     }]
 })
 

@@ -94,7 +94,7 @@ const getHouseByUserId = async (req, res) => {
 
     try {
         const user = await User.findById(req.userId).populate('houses');
-
+        console.log(user);
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
@@ -129,7 +129,26 @@ const updateHouse = async (req, res) => {
 
 }
 const deleteHouse = async (req, res) => {
-    res.status(200).json({ msg: 'all deleted' })
+    try {
+        const id = req.params.id
+
+        // if (!mongoose.Types.ObjectId.isValid(id))
+        //     return res.status(404).json({
+        //         msg: `No booking with id :${id}`
+        //     });
+        const house = await House.findByIdAndDelete(id)
+
+        if (!house) {
+            return res.status(400).json({ msg: 'No house can be deleted' })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Successfully Deleted'
+        })
+    } catch (error) {
+        return res.status(400).json({ msg: 'Something went wrong' })
+    }
 }
 
 module.exports = { getASingleHouse, getAllHouses, createHouse, updateHouse, deleteHouse, getHouseByUserId }
